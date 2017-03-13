@@ -1,4 +1,3 @@
-// Other constants
 export const MAX_QUEUE_SIZE = 500;
 export const TIMEOUT = 5;
 

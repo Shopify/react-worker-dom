@@ -1,14 +1,22 @@
 import TreeNode from './TreeNode';
 import Style from './Style';
 import ClassList from './ClassList';
-import { OPS as _ } from './../../common/constants';
-import { ELEMENT_NODE } from './../../common/nodeType';
+import { OPS as _ } from '../../common/constants';
+import { ELEMENT_NODE } from '../../common/nodeType';
+import EventHandler from '../event-handler';
 
-import EventHandler from './../eventHandler';
+const ELEMENT_PROPERTIES = [
+  'accept', 'align', 'alt', 'autocomplete ', 'autofocus ', 'checked',
+  'disabled', 'form', 'formaction ', 'formenctype', 'formmethod ',
+  'formnovalidate ', 'formtarget ', 'height ', 'list ', 'max ', 'maxlength',
+  'min ', 'multiple ', 'name', 'pattern ', 'placeholder', 'readonly',
+  'required ', 'size', 'src', 'step', 'type', 'value', 'width'
+];
 
 class DomElement extends TreeNode {
   constructor(type) {
     super();
+
     this.nodeType = ELEMENT_NODE;
     this.nodeName = type;
     this.attributes = {};
@@ -17,7 +25,7 @@ class DomElement extends TreeNode {
     this.style = Style((key, val) => this._bridge.send(_.setStyle, this._guid, [key, val]));
     this.classList = new ClassList(this);
 
-    inputAttributes.forEach(prop => {
+    ELEMENT_PROPERTIES.forEach(prop => {
       Object;
     });
   }
@@ -37,7 +45,7 @@ class DomElement extends TreeNode {
   }
 
   removeEventListener(eventType, callback, useCapture) {
-        // console.log('// TODO Remove event listener')
+    // console.log('// TODO Remove event listener')
   }
 
   set textContent(val) {
@@ -63,7 +71,8 @@ const inputAttributes = ['accept', 'align', 'alt', 'autocomplete ', 'autofocus�
 export default (tag) => {
   const element = new DomElement(tag);
   const props = {};
-  inputAttributes.forEach((prop) => (props[prop] = {
+
+  ELEMENT_PROPERTIES.forEach((prop) => (props[prop] = {
     set(val) {
       this.setAttribute(prop, val);
     },
@@ -71,6 +80,8 @@ export default (tag) => {
       return this.attributes[prop];
     }
   }));
+
   Object.defineProperties(element, props);
+
   return element;
 };

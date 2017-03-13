@@ -1,13 +1,11 @@
-import { DOCUMENT_NODE } from './../common/nodeType';
-import { OPS as _ } from './../common/constants';
+import { DOCUMENT_NODE } from '../common/nodeType';
+import { OPS as _ } from '../common/constants';
 import Bridge from './bridge';
-
 import createDOMElement from './dom/DomElement';
 import Fragment from './dom/Fragment';
 import TextNode from './dom/TextNode';
 import Comment from './dom/Comment';
-
-import EventHandler from './eventHandler';
+import EventHandler from './event-handler';
 
 const nodes = {};
 
@@ -40,15 +38,15 @@ const Document = {
     EventHandler.add(this, eventType, callback, useCapture);
   },
   createEvent() {
-        // TODO - Implement this
-    console.log('Create event called', arguments);
+    // TODO - Implement this
+    console.trace('createEvent', arguments);
     return {};
   }
 };
 
 const Window = {
   addEventListener(eventType, callback, useCapture) {
-        // EventHandler.add(this, eventType, callback, useCapture);
+    // EventHandler.add(this, eventType, callback, useCapture);
   },
   document: Document,
   location: self.location
