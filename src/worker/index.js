@@ -1,5 +1,5 @@
-import {DOCUMENT_NODE} from './../common/nodeType'
-import {OPS as _} from './../common/constants';
+import { DOCUMENT_NODE } from './../common/nodeType';
+import { OPS as _ } from './../common/constants';
 import Bridge from './bridge';
 
 import createDOMElement from './dom/DomElement';
@@ -9,50 +9,50 @@ import Comment from './dom/Comment';
 
 import EventHandler from './eventHandler';
 
-let nodes = {};
+const nodes = {};
 
 const Document = {
-    nodeType: DOCUMENT_NODE,
-    _guid: 'document',
-    nodeName: '#document',
-    documentMode: 12,
-    documentElement: {
-        style: {},
-        textContent: true
-    },
-    oninput: true,
-    onchange: true,
-    createElement(tag) {
-        let el = createDOMElement(tag);
-        el.ownerDocument = document;
-        return el;
-    },
-    createComment(comment) {
-        return new Comment(comment);
-    },
-    createDocumentFragment() {
-        return new Fragment();
-    },
-    createTextNode(val) {
-        return new TextNode(val);
-    },
-    addEventListener(eventType, callback, useCapture) {
-        EventHandler.add(this, eventType, callback, useCapture);
-    },
-    createEvent() {
+  nodeType: DOCUMENT_NODE,
+  _guid: 'document',
+  nodeName: '#document',
+  documentMode: 12,
+  documentElement: {
+    style: {},
+    textContent: true
+  },
+  oninput: true,
+  onchange: true,
+  createElement(tag) {
+    const el = createDOMElement(tag);
+    el.ownerDocument = document;
+    return el;
+  },
+  createComment(comment) {
+    return new Comment(comment);
+  },
+  createDocumentFragment() {
+    return new Fragment();
+  },
+  createTextNode(val) {
+    return new TextNode(val);
+  },
+  addEventListener(eventType, callback, useCapture) {
+    EventHandler.add(this, eventType, callback, useCapture);
+  },
+  createEvent() {
         // TODO - Implement this
-        console.log('Create event called', arguments);
-        return {};
-    }
+    console.log('Create event called', arguments);
+    return {};
+  }
 };
 
 const Window = {
-    addEventListener(eventType, callback, useCapture) {
-        //EventHandler.add(this, eventType, callback, useCapture);
-    },
-    document: Document,
-    location: self.location
-}
+  addEventListener(eventType, callback, useCapture) {
+        // EventHandler.add(this, eventType, callback, useCapture);
+  },
+  document: Document,
+  location: self.location
+};
 
 self.window = Window;
 self.document = Document;
