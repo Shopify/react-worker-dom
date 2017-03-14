@@ -15,13 +15,14 @@ class ReactWorker {
       case _.renderQueue:
         const start = performance.now();
         payload.forEach(op => this.domOperation(op));
-                /* this.channel.send(_.renderTime, {
-                    time: performance.now() - start,
-                    count: payload.length
-                });*/
+        /* this.channel.send(_.renderTime, {
+            time: performance.now() - start,
+            count: payload.length
+        }); */
         break;
+
       default:
-        console.log('Cannot handle message %s', data.type, data.args);
+        console.trace('Unknown message %s', data.type, data.args);
     }
   }
 }

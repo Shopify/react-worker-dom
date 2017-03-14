@@ -1,34 +1,37 @@
-import { OPS as _ } from '../common/constants';
-import Bridge from './bridge';
-import { deserializeEvent } from '../common/channel';
-import nodeList from './nodeList';
+import { deserializeEvent } from 'common/channel';
+import { OPS as _ } from 'common/constants';
 
 let eventHandlerGuid = 0;
 
 class EventHandler {
-  constructor() {
+  constructor(bridge, nodeList) {
+    this.bridge = bridge;
+    this.nodeList = nodeList;
     this.eventHandlers = {};
-    Bridge.onEventHandler(this.onEventHandler.bind(this));
+
+    this.bridge.onEventHandler(this.onEventHandler.bind(this));
   }
 
   add(node, type, handler, useCapture) {
     this.eventHandlers[eventHandlerGuid] = handler;
-    Bridge.send(_.addEventHandler, node._guid, [type, eventHandlerGuid, useCapture]);
+    this.bridge.send(_.addEventHandler, node._guid, [type, eventHandlerGuid, useCapture]);
     eventHandlerGuid++;
   }
 
+  // TODO: Implement
   remove(node, type, handler) {
-        // TODO - Implement this
+    console.trace('EventHandler#remove', arguments);
   }
 
   onEventHandler({ handler, event }) {
     if (typeof this.eventHandlers[handler] === 'function') {
       const e = deserializeEvent(event);
-      e.currentTarget = nodeList.get(e.currentTarget);
+      e.currentTarget = this.nodeList.get(e.currentTarget);
       e.target = {
-        ...nodeList.get(e.target),
+        ...this.nodeList.get(e.target),
         ...e.targetProps
       };
+
       this.eventHandlers[handler](e);
     }
     else {
@@ -37,4 +40,4 @@ class EventHandler {
   }
 }
 
-export default new EventHandler();
+export default EventHandler;

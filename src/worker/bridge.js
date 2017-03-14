@@ -1,8 +1,8 @@
-import Channel from './../common/channel';
-import { TIMEOUT, WORKER_MESSAGES as _ } from './../common/constants';
-import TreeNode from './dom/TreeNode';
+import Channel from 'common/channel';
+import { TIMEOUT, WORKER_MESSAGES as _ } from 'common/constants';
+import TreeNode from './dom/tree-node';
 
-class WorkerBridge {
+class Bridge {
   constructor() {
     this.queue = [];
     this.channel = new Channel(self);
@@ -22,14 +22,18 @@ class WorkerBridge {
       case _.renderTime:
         this.rate = payload.count / payload.time;
         break;
+
       case _.event:
         this.eventHandler(payload);
         break;
+
       default:
-        console.log('Unknown operation %s', type);
+        console.trace('Unknown message %s', type);
     }
   }
 
+  // XXX: Consider explicitly passing in `eventHandler` instead of using this
+  // setter method. A bridge should only have one corresponding event-handler.
   onEventHandler(handler) {
     this.eventHandler = handler;
   }
@@ -38,8 +42,10 @@ class WorkerBridge {
     if (!Array.isArray(params)) {
       params = [params];
     }
+
     const guidPos = [];
     const args = params.map((a, i) => a instanceof TreeNode ? (guidPos.push(i), a._guid) : a);
+
     this.queue.push({
       operation,
       guid,
@@ -57,4 +63,4 @@ class WorkerBridge {
   }
 }
 
-export default new WorkerBridge();
+export default new Bridge();

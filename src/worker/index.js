@@ -1,54 +1,76 @@
-import { DOCUMENT_NODE } from '../common/nodeType';
-import { OPS as _ } from '../common/constants';
+import { DOCUMENT_NODE } from 'common/nodeType';
+import { OPS as _ } from 'common/constants';
 import Bridge from './bridge';
-import createDOMElement from './dom/DomElement';
+import EventHandler from './event-handler';
+import { createElement } from './dom/dom-element';
 import Fragment from './dom/Fragment';
 import TextNode from './dom/TextNode';
 import Comment from './dom/Comment';
-import EventHandler from './event-handler';
+
+/**
+ * TODO: Convert into factory.
+ */
 
 const nodes = {};
+const nodeList = new Map();
+const eventHandler = new EventHandler(Bridge, nodeList);
 
 const Document = {
-  nodeType: DOCUMENT_NODE,
   _guid: 'document',
-  nodeName: '#document',
+
+  addEventListener(eventType, callback, useCapture) {
+    eventHandler.add(this, eventType, callback, useCapture);
+  },
+
+  createComment(comment) {
+    return new Comment(comment);
+  },
+
+  createDocumentFragment() {
+    return new Fragment();
+  },
+
+  createElement(tag) {
+    const el = createDlement(tag, bridge, eventHandler);
+    el.ownerDocument = document;
+    return el;
+  },
+
+  // TODO: Implement
+  createEvent() {
+    console.trace('createEvent', arguments);
+    return {};
+  },
+
+  createTextNode(val) {
+    return new TextNode(val);
+  },
+
   documentMode: 12,
+
   documentElement: {
     style: {},
     textContent: true
   },
+
+  nodeName: '#document',
+
+  nodeType: DOCUMENT_NODE,
+
   oninput: true,
+
   onchange: true,
-  createElement(tag) {
-    const el = createDOMElement(tag);
-    el.ownerDocument = document;
-    return el;
-  },
-  createComment(comment) {
-    return new Comment(comment);
-  },
-  createDocumentFragment() {
-    return new Fragment();
-  },
-  createTextNode(val) {
-    return new TextNode(val);
-  },
-  addEventListener(eventType, callback, useCapture) {
-    EventHandler.add(this, eventType, callback, useCapture);
-  },
-  createEvent() {
-    // TODO - Implement this
-    console.trace('createEvent', arguments);
-    return {};
-  }
 };
 
 const Window = {
+  // TODO: Implement
   addEventListener(eventType, callback, useCapture) {
-    // EventHandler.add(this, eventType, callback, useCapture);
+    // eventHandler.add(this, eventType, callback, useCapture);
+    console.trace('window.addEventListener', arguments);
   },
+
   document: Document,
+
   location: self.location
 };
 
